@@ -35,9 +35,9 @@
         /* Random positions for images */
         .image1 { width: 300px; height: auto; top: 10%; left: 20%; }
         .image2 { width: 300px; height: auto; top: 50%; left: 70%; }
-        .image3 {  width: 300px; height: auto; top: 80%; left: 10%; }
-        .image4 {  width: 300px; height: auto; top: 20%; left: 80%; }
-        .image5 {  width: 300px; height: auto; top: 60%; left: 30%; }
+        .image3 {  width: 200px; height: auto; top: 80%; left: 10%; }
+        .image4 {  width: 200px; height: auto; top: 20%; left: 80%; }
+        .image5 {  width: 210px; height: auto; top: 60%; left: 30%; }
 
         #audioControl {
             position: fixed;
@@ -85,41 +85,40 @@
     <button id="audioControl">Pause Audio</button>
 
     <script>
-        const canvas = document.querySelector('.canvas');
+        const body = document.body;
         let isDown = false;
         let startX;
         let startY;
         let scrollLeft;
         let scrollTop;
 
-        canvas.addEventListener('mousedown', (e) => {
+        body.addEventListener('mousedown', (e) => {
             isDown = true;
-            canvas.classList.add('grabbing');
+            body.classList.add('grabbing');
             startX = e.pageX;
             startY = e.pageY;
-            scrollLeft = canvas.scrollLeft;
-            scrollTop = canvas.scrollTop;
+            scrollLeft = window.scrollX;
+            scrollTop = window.scrollY;
         });
 
-        canvas.addEventListener('mouseleave', () => {
+        body.addEventListener('mouseleave', () => {
             isDown = false;
-            canvas.classList.remove('grabbing');
+            body.classList.remove('grabbing');
         });
 
-        canvas.addEventListener('mouseup', () => {
+        body.addEventListener('mouseup', () => {
             isDown = false;
-            canvas.classList.remove('grabbing');
+            body.classList.remove('grabbing');
         });
 
-        canvas.addEventListener('mousemove', (e) => {
+        body.addEventListener('mousemove', (e) => {
             if (!isDown) return;
             e.preventDefault();
             const x = e.pageX;
             const y = e.pageY;
             const walkX = (x - startX);
             const walkY = (y - startY);
-            canvas.scrollLeft = scrollLeft - walkX;
-            canvas.scrollTop = scrollTop - walkY;
+            window.scrollTo(scrollLeft - walkX, scrollTop - walkY);
         });
 
         const audioElement = document.getElementById('backgroundAudio');
