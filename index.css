@@ -1,6 +1,6 @@
 .mephoto {
     width: 200px; /* Adjust as needed */
-    height: auto;
+    height: 300px;
     display: block;
     margin: 10px auto; /* Centers the image horizontally and adds some spacing */
 }
