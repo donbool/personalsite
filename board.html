@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Exploration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+            margin: 0;
+            cursor: grab;
+        }
+
+        body.grabbing {
+            cursor: grabbing;
+        }
+
+        .canvas {
+            width: 200vw; /* 200% of the viewport width */
+            height: 200vh; /* 200% of the viewport height */
+            position: relative;
+            overflow: auto;
+        }
+
+        .image {
+            position: absolute;
+        }
+
+        /* Sample positions for images */
+        .image1 {
+            top: 10%;
+            left: 10%;
+        }
+
+        .image2 {
+            top: 10%;
+            right: 10%;
+        }
+
+        .image3 {
+            bottom: 10%;
+            left: 10%;
+        }
+
+        .image4 {
+            bottom: 10%;
+            right: 10%;
+        }
+    </style>
+</head>
+
+<audio id="backgroundMusic" loop>
+    <source src="06_27_Braids.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+</audio>
+
+<body>
+    <div class="canvas">
+        <img src="nico.HEIC" alt="Description 1" class="image image1">
+        <img src="path_to_image2.jpg" alt="Description 2" class="image image2">
+        <img src="path_to_image3.jpg" alt="Description 3" class="image image3">
+        <img src="path_to_image4.jpg" alt="Description 4" class="image image4">
+    </div>
+
+    <button onclick="toggleMusic()">Toggle Music</button>
+
+    <script>
+        const canvas = document.querySelector('.canvas');
+        let isDown = false;
+        let startX;
+        let startY;
+        let scrollLeft;
+        let scrollTop;
+
+        canvas.addEventListener('mousedown', (e) => {
+            isDown = true;
+            canvas.classList.add('grabbing');
+            startX = e.pageX;
+            startY = e.pageY;
+            scrollLeft = canvas.scrollLeft;
+            scrollTop = canvas.scrollTop;
+        });
+
+        canvas.addEventListener('mouseleave', () => {
+            isDown = false;
+            canvas.classList.remove('grabbing');
+        });
+
+        canvas.addEventListener('mouseup', () => {
+            isDown = false;
+            canvas.classList.remove('grabbing');
+        });
+
+        canvas.addEventListener('mousemove', (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+            const x = e.pageX;
+            const y = e.pageY;
+            const walkX = (x - startX);
+            const walkY = (y - startY);
+            canvas.scrollLeft = scrollLeft - walkX;
+            canvas.scrollTop = scrollTop - walkY;
+        });
+
+        function toggleMusic() {
+            const audioElement = document.getElementById("backgroundMusic");
+            if (audioElement.paused) {
+                audioElement.play();
+            } else {
+                audioElement.pause();
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const audioElement = document.getElementById("backgroundMusic");
+            audioElement.play().catch(error => {
+                // Autoplay was prevented.
+                // Show a UI element to let the user manually start playback.
+        });
+});
+    }
+
+    </script>
+</body>
+
+</html>
