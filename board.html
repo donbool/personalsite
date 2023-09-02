@@ -43,21 +43,24 @@
             padding: 10px 20px;
             border: none;
             border-radius: 25px; /* Rounded corners */
-            background-color: #2C3E50; /* Dark blue color */
-            color: #ECF0F1; /* Light text color */
+            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white */
+            color: #000; /* Black text */
             font-size: 16px;
+            font-weight: 500; /* Medium font weight */
             cursor: pointer;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-            transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+            transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transition for hover effects */
         }
 
         #audioControl:hover {
-            background-color: #34495E; /* Slightly darker blue on hover */
+            background-color: rgba(255, 255, 255, 1); /* Solid white on hover */
+            transform: scale(1.05); /* Slightly enlarge the button on hover */
         }
 
-        #audioControl:focus {
-            outline: none; /* Remove default focus outline */
+        #audioControl:active {
+            transform: scale(1); /* Reset size when button is clicked */
         }
+
     </style>
 </head>
 
