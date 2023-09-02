@@ -1,6 +1,6 @@
 .mephoto {
-    max-width: 200px; /* Adjust as needed */
-    max-height: 200px; /* Adjust as needed */
+    max-width: 100px; /* Adjust as needed */
+    max-height: 100px; /* Adjust as needed */
     display: block;
     margin: 10px auto; /* Centers the image and adds some spacing */
 }
