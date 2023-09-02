@@ -4,22 +4,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Exploration</title>
+    <title>Interactive Exploration</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Times New Roman', Times, serif;
             overflow: hidden;
             margin: 0;
             cursor: grab;
         }
 
         body.grabbing {
-            cursor: grabbing;
+            cursor: pointer;
         }
 
         .canvas {
-            width: 200vw; /* 200% of the viewport width */
-            height: 200vh; /* 200% of the viewport height */
+            width: 300vw; /* 300% of the viewport width */
+            height: 300vh; /* 300% of the viewport height */
             position: relative;
             overflow: auto;
         }
@@ -28,43 +28,37 @@
             position: absolute;
         }
 
-        /* Sample positions for images */
-        .image1 {
-            top: 10%;
-            left: 10%;
-        }
+        /* Random positions for images */
+        .image1 { top: 10%; left: 20%; }
+        .image2 { top: 50%; left: 70%; }
+        .image3 { top: 80%; left: 10%; }
+        .image4 { top: 20%; left: 80%; }
+        .image5 { top: 60%; left: 30%; }
 
-        .image2 {
-            top: 10%;
-            right: 10%;
-        }
-
-        .image3 {
-            bottom: 10%;
-            left: 10%;
-        }
-
-        .image4 {
-            bottom: 10%;
-            right: 10%;
+        #audioControl {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            z-index: 1000; /* Ensure it's above other content */
         }
     </style>
 </head>
 
-<audio id="backgroundMusic" loop>
-    <source src="06_27_Braids.mp3" type="audio/mpeg">
-    Your browser does not support the audio element.
-</audio>
-
 <body>
     <div class="canvas">
-        <img src="nico.HEIC" alt="Description 1" class="image image1">
-        <img src="path_to_image2.jpg" alt="Description 2" class="image image2">
+        <img src="me2.jpeg" alt="Description 1" class="image image1">
+        <img src="mepic.png" alt="Description 2" class="image image2">
         <img src="path_to_image3.jpg" alt="Description 3" class="image image3">
         <img src="path_to_image4.jpg" alt="Description 4" class="image image4">
+        <img src="path_to_image5.jpg" alt="Description 5" class="image image5">
     </div>
 
-    <button onclick="toggleMusic()">Toggle Music</button>
+    <audio id="backgroundAudio" autoplay loop>
+        <source src="06_27_Braids.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <button id="audioControl">Pause Audio</button>
 
     <script>
         const canvas = document.querySelector('.canvas');
@@ -104,23 +98,17 @@
             canvas.scrollTop = scrollTop - walkY;
         });
 
-        function toggleMusic() {
-            const audioElement = document.getElementById("backgroundMusic");
+        const audioElement = document.getElementById('backgroundAudio');
+        const audioControl = document.getElementById('audioControl');
+        audioControl.addEventListener('click', () => {
             if (audioElement.paused) {
                 audioElement.play();
+                audioControl.textContent = "Pause Audio";
             } else {
                 audioElement.pause();
-        }
-
-        document.addEventListener("DOMContentLoaded", function() {
-            const audioElement = document.getElementById("backgroundMusic");
-            audioElement.play().catch(error => {
-                // Autoplay was prevented.
-                // Show a UI element to let the user manually start playback.
+                audioControl.textContent = "Play Audio";
+            }
         });
-});
-    }
-
     </script>
 </body>
 
