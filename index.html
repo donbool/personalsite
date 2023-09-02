@@ -10,10 +10,24 @@
         justify-content: center;
         height: 100vh;
         margin: 0;
+        overflow: hidden; /* Prevent default scrolling */
+        cursor: grab; /* Cursor style */
+    }
+    body.grabbing {
+        cursor: grabbing;
     }
     header, main, footer {
         max-width: 800px;
         margin: 0 auto;
+    }
+    .content-wrapper {
+        width: 150%; /* Make the content wider than the viewport */
+        height: 150%; /* Make the content taller than the viewport */
+    }
+
+    .bubble-effect {
+        transform: scale(1.5);
+        transition: transform 0.5s ease-in-out;
     }
 </style>
 
@@ -25,24 +39,26 @@
 </head>
 
 <body>
-    <header>
-        <div class="name-time">
-            <h1><i>Benjamin Benscher</i></h1>
-            <img class="mephoto" src="./images/benjheader.jpeg" alt=""/>
-            <p><a href=https://24timezones.com/New-York/time> TIME IN GAINESVILLE, FL</a> - <span id="liveTime"></span> EST</p>
-        </div>
-        <nav>
-            <p>
-                <a href="about.html">about //</a>
-                <a href="faq.html">FAQ //</a>
-                <a href="https://drive.google.com/file/d/1WvmITwWRefY-56XSVqntjowTDR0msqC1/view?usp=sharing">resume //</a>
-                <a href="contact.html">contact</a>
-            </p>
-        </nav>
-    </header>
-    <main>
-        <!-- Content for the main page goes here -->
-    </main>
+    <div class="content-wrapper">
+        <header>
+            <div class="name-time">
+                <h1>Benjamin Benscher</h1>
+                <img class="mephoto" src="./images/benjheader.jpeg" alt=""/>
+                <p><a href=https://24timezones.com/New-York/time> TIME IN GAINESVILLE, FL</a> - <span id="liveTime"></span> EST</p>
+            </div>
+            <nav>
+                <p>
+                    <a href="about.html">about //</a>
+                    <a href="faq.html">FAQ //</a>
+                    <a href="https://drive.google.com/file/d/1WvmITwWRefY-56XSVqntjowTDR0msqC1/view?usp=sharing">resume //</a>
+                    <a href="contact.html">contact</a>
+                </p>
+            </nav>
+        </header>
+        <main>
+            <!-- Content for the main page goes here -->
+        </main>
+    </div>
 
     <script>
         function updateESTTime() {
@@ -66,9 +82,50 @@
     
         // Update the time every second
         setInterval(updateESTTime, 1000);
+
+        // Dragging functionality
+        let isDown = false;
+        let startX;
+        let startY;
+        let scrollLeft;
+        let scrollTop;
+
+        const contentWrapper = document.querySelector('.content-wrapper');
+
+        contentWrapper.addEventListener('mousedown', (e) => {
+            isDown = true;
+            contentWrapper.classList.add('grabbing');
+            startX = e.pageX;
+            startY = e.pageY;
+            scrollLeft = contentWrapper.scrollLeft;
+            scrollTop = contentWrapper.scrollTop;
+        });
+
+        contentWrapper.addEventListener('mouseleave', () => {
+            isDown = false;
+            contentWrapper.classList.remove('grabbing');
+        });
+
+        contentWrapper.addEventListener('mouseup', () => {
+            isDown = false;
+            contentWrapper.classList.remove('grabbing');
+        });
+
+        contentWrapper.addEventListener('mousemove', (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+            const x = e.pageX;
+            const y = e.pageY;
+            const walkX = (x - startX);
+            const walkY = (y - startY);
+            contentWrapper.scrollLeft = scrollLeft - walkX;
+            contentWrapper.scrollTop = scrollTop - walkY;
+        });
+
+        contentWrapper.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            contentWrapper.classList.toggle('bubble-effect');
+        });
     </script>
-    
-
 </body>
-
 </html>
