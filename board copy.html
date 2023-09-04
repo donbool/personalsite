@@ -92,6 +92,11 @@
 
     </div>
 
+    <audio id="backgroundAudio" loop>
+        <source id="audioSource" src="06_27_Braids.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
     <div style="position: fixed; bottom: 10px; left: 10px; display: flex; align-items: center;">
         <button id="prevAudio" class="audioButton">&lt;</button>
         <button id="audioControl" class="audioButton">Play Audio</button>
@@ -130,6 +135,9 @@
         let startY;
         let scrollLeft;
         let scrollTop;
+        let velocityX = 0;
+        let velocityY = 0;
+        let isAnimating = false;
 
         const audioElement = document.getElementById('backgroundAudio');
         const audioControl = document.getElementById('audioControl');
@@ -139,6 +147,24 @@
 
         const audioFiles = ["06_27_Braids.mp3", "justbuz.mp3", "thirdSong.mp3"];
         let currentAudioIndex = 0;
+
+        function animate() {
+            if (!isAnimating) return;
+            window.scrollBy(velocityX, velocityY);
+
+            // Reduce the velocity for the momentum effect
+            velocityX *= 0.95;
+            velocityY *= 0.95;
+
+            // If velocity is very small, stop the animation
+            if (Math.abs(velocityX) < 0.5 && Math.abs(velocityY) < 0.5) {
+                isAnimating = false;
+                return;
+            }
+
+            requestAnimationFrame(animate);
+        }
+
 
         body.addEventListener('mousedown', (e) => {
             isDown = true;
@@ -152,11 +178,15 @@
         body.addEventListener('mouseleave', () => {
             isDown = false;
             body.classList.remove('grabbing');
+            isAnimating = true;
+            animate();
         });
 
         body.addEventListener('mouseup', () => {
             isDown = false;
             body.classList.remove('grabbing');
+            isAnimating = true;
+            animate();
         });
 
         body.addEventListener('mousemove', (e) => {
@@ -166,6 +196,11 @@
             const y = e.pageY;
             const walkX = (x - startX);
             const walkY = (y - startY);
+
+            // Calculate velocity
+            velocityX = (x - startX) * 0.2;
+            velocityY = (y - startY) * 0.2;
+
             window.scrollTo(scrollLeft - walkX, scrollTop - walkY);
         });
 
