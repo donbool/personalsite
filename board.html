@@ -210,7 +210,7 @@
 
         function applyMomentum() {
             if (Math.abs(velocityX) < 0.1 && Math.abs(velocityY) < 0.1) return;
-            window.scrollBy(velocityX, velocityY);
+            window.scrollBy(-velocityX, -velocityY); // Invert the velocity here
             velocityX *= 0.95; // damping factor
             velocityY *= 0.95; // damping factor
             rafId = requestAnimationFrame(applyMomentum);
