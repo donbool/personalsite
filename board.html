@@ -159,6 +159,11 @@
         let startY;
         let scrollLeft;
         let scrollTop;
+        let prevX = 0;
+        let prevY = 0;
+        let velocityX = 0;
+        let velocityY = 0;
+        let rafId;
 
         const audioElement = document.getElementById('backgroundAudio');
         const audioControl = document.getElementById('audioControl');
@@ -174,18 +179,13 @@
             body.classList.add('grabbing');
             startX = e.pageX;
             startY = e.pageY;
+            prevX = startX;
+            prevY = startY;
             scrollLeft = window.scrollX;
             scrollTop = window.scrollY;
-        });
-
-        body.addEventListener('mouseleave', () => {
-            isDown = false;
-            body.classList.remove('grabbing');
-        });
-
-        body.addEventListener('mouseup', () => {
-            isDown = false;
-            body.classList.remove('grabbing');
+            if (rafId) {
+                cancelAnimationFrame(rafId);
+            }
         });
 
         body.addEventListener('mousemove', (e) => {
@@ -193,10 +193,28 @@
             e.preventDefault();
             const x = e.pageX;
             const y = e.pageY;
+            velocityX = x - prevX;
+            velocityY = y - prevY;
             const walkX = (x - startX);
             const walkY = (y - startY);
             window.scrollTo(scrollLeft - walkX, scrollTop - walkY);
+            prevX = x;
+            prevY = y;
         });
+
+        body.addEventListener('mouseup', () => {
+            isDown = false;
+            body.classList.remove('grabbing');
+            applyMomentum();
+        });
+
+        function applyMomentum() {
+            if (Math.abs(velocityX) < 0.1 && Math.abs(velocityY) < 0.1) return;
+            window.scrollBy(velocityX, velocityY);
+            velocityX *= 0.95; // damping factor
+            velocityY *= 0.95; // damping factor
+            rafId = requestAnimationFrame(applyMomentum);
+        }
 
         audioControl.addEventListener('click', () => {
             if (audioElement.paused) {
