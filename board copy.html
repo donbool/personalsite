@@ -97,7 +97,7 @@
         Your browser does not support the audio element.
     </audio>
 
-    <div style="position: fixed; bottom: 10px; left: 10px; display: flex; align-items: center;">
+    <div style="position: fixed; bottom: 10px; left: 10px; display: flex; align-items: center; z-index: 1000;">
         <button id="prevAudio" class="audioButton">&lt;</button>
         <button id="audioControl" class="audioButton">Play Audio</button>
         <button id="nextAudio" class="audioButton">&gt;</button>
@@ -105,10 +105,6 @@
 
     <style>
         .audioButton {
-            position: fixed;
-            bottom: 10px;
-            left: 3%;
-            z-index: 1000; /* Ensure it's above other content */
             padding: 10px 20px;
             border: none;
             border-radius: 25px;
