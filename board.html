@@ -93,11 +93,15 @@
     </div>
 
     <audio id="backgroundAudio" loop>
-        <source src="06_27_Braids.mp3" type="audio/mpeg">
+        <source id="audioSource" src="06_27_Braids.mp3" type="audio/mpeg">
         Your browser does not support the audio element.
     </audio>
 
-    <button id="audioControl">Play Audio</button>
+    <div style="position: fixed; bottom: 10px; left: 10px; display: flex; align-items: center;">
+        <button id="prevAudio" style="margin-right: 10px;">&lt;</button>
+        <button id="audioControl">Play Audio</button>
+        <button id="nextAudio" style="margin-left: 10px;">&gt;</button>
+    </div>
 
     <script>
         const body = document.body;
@@ -106,6 +110,36 @@
         let startY;
         let scrollLeft;
         let scrollTop;
+        let velocityX = 0;
+        let velocityY = 0;
+        let isAnimating = false;
+
+        const audioElement = document.getElementById('backgroundAudio');
+        const audioControl = document.getElementById('audioControl');
+        const prevAudio = document.getElementById('prevAudio');
+        const nextAudio = document.getElementById('nextAudio');
+        const audioSource = document.getElementById('audioSource');
+
+        const audioFiles = ["06_27_Braids.mp3", "justbuz.mp3", "thirdSong.mp3"];
+        let currentAudioIndex = 0;
+
+        function animate() {
+            if (!isAnimating) return;
+            window.scrollBy(velocityX, velocityY);
+
+            // Reduce the velocity for the momentum effect
+            velocityX *= 0.95;
+            velocityY *= 0.95;
+
+            // If velocity is very small, stop the animation
+            if (Math.abs(velocityX) < 0.5 && Math.abs(velocityY) < 0.5) {
+                isAnimating = false;
+                return;
+            }
+
+            requestAnimationFrame(animate);
+        }
+
 
         body.addEventListener('mousedown', (e) => {
             isDown = true;
@@ -119,11 +153,15 @@
         body.addEventListener('mouseleave', () => {
             isDown = false;
             body.classList.remove('grabbing');
+            isAnimating = true;
+            animate();
         });
 
         body.addEventListener('mouseup', () => {
             isDown = false;
             body.classList.remove('grabbing');
+            isAnimating = true;
+            animate();
         });
 
         body.addEventListener('mousemove', (e) => {
@@ -133,11 +171,14 @@
             const y = e.pageY;
             const walkX = (x - startX);
             const walkY = (y - startY);
+
+            // Calculate velocity
+            velocityX = (x - startX) * 0.2;
+            velocityY = (y - startY) * 0.2;
+
             window.scrollTo(scrollLeft - walkX, scrollTop - walkY);
         });
 
-        const audioElement = document.getElementById('backgroundAudio');
-        const audioControl = document.getElementById('audioControl');
         audioControl.addEventListener('click', () => {
             if (audioElement.paused) {
                 audioElement.play();
@@ -146,6 +187,22 @@
                 audioElement.pause();
                 audioControl.textContent = "Play Audio";
             }
+        });
+
+        prevAudio.addEventListener('click', () => {
+            currentAudioIndex = (currentAudioIndex - 1 + audioFiles.length) % audioFiles.length;
+            audioSource.src = audioFiles[currentAudioIndex];
+            audioElement.load();
+            audioElement.play();
+            audioControl.textContent = "Pause Audio";
+        });
+
+        nextAudio.addEventListener('click', () => {
+            currentAudioIndex = (currentAudioIndex + 1) % audioFiles.length;
+            audioSource.src = audioFiles[currentAudioIndex];
+            audioElement.load();
+            audioElement.play();
+            audioControl.textContent = "Pause Audio";
         });
     </script>
 </body>
