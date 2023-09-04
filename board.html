@@ -188,25 +188,45 @@
             }
         });
 
+        let lastPositions = [];
+        const maxPositions = 5; // Store the last 5 positions
+
         body.addEventListener('mousemove', (e) => {
             if (!isDown) return;
             e.preventDefault();
             const x = e.pageX;
             const y = e.pageY;
-            velocityX = x - prevX;
-            velocityY = y - prevY;
             const walkX = (x - startX);
             const walkY = (y - startY);
             window.scrollTo(scrollLeft - walkX, scrollTop - walkY);
-            prevX = x;
-            prevY = y;
+
+            // Store the current position and timestamp
+            lastPositions.push({ x, y, time: Date.now() });
+            if (lastPositions.length > maxPositions) {
+                lastPositions.shift(); // Remove the oldest position
+            }
         });
 
         body.addEventListener('mouseup', () => {
             isDown = false;
             body.classList.remove('grabbing');
-            applyMomentum();
+
+            // Calculate the speed of the drag just before release
+            if (lastPositions.length > 1) {
+                const lastPos = lastPositions[lastPositions.length - 1];
+                const prevPos = lastPositions[lastPositions.length - 2];
+                const deltaTime = lastPos.time - prevPos.time;
+                const deltaX = lastPos.x - prevPos.x;
+                const deltaY = lastPos.y - prevPos.y;
+
+                // Speed = distance / time
+                velocityX = deltaX / deltaTime * 50; // Multiplied by 50 for stronger momentum
+                velocityY = deltaY / deltaTime * 50;
+
+                applyMomentum();
+            }
         });
+
 
         function applyMomentum() {
             if (Math.abs(velocityX) < 0.1 && Math.abs(velocityY) < 0.1) return;
