@@ -98,14 +98,36 @@
     </audio>
 
     <div style="position: fixed; bottom: 10px; left: 10px; display: flex; align-items: center; z-index: 1000;">
-        <button id="prevAudio" class="audioButton">&lt;</button>
-        <button id="audioControl" class="audioButton">Play Audio</button>
-        <button id="nextAudio" class="audioButton">&gt;</button>
+        <button id="prevAudio" class="controlButton">&lt;</button>
+        <button id="audioControl" class="mainAudioButton">Play Audio</button>
+        <button id="nextAudio" class="controlButton">&gt;</button>
     </div>
 
     <style>
-        .audioButton {
+        .mainAudioButton {
             padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            background-color: rgba(255, 255, 255, 0.8);
+            color: #000;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .mainAudioButton:hover {
+            background-color: rgba(255, 255, 255, 0.5);
+            transform: scale(1.05);
+        }
+
+        .mainAudioButton:active {
+            transform: scale(1);
+        }
+
+        .controlButton {
+            padding: 10px 15px;
             border: none;
             border-radius: 25px;
             background-color: rgba(255, 255, 255, 0.8);
@@ -118,12 +140,12 @@
             margin: 0 5px; /* Added margin for spacing */
         }
 
-        .audioButton:hover {
+        .controlButton:hover {
             background-color: rgba(255, 255, 255, 0.5);
             transform: scale(1.05);
         }
 
-        .audioButton:active {
+        .controlButton:active {
             transform: scale(1);
         }
     </style>
