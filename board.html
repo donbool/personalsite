@@ -157,67 +157,37 @@
     <script>
         const body = document.body;
         let isDown = false;
-        let startX;
-        let startY;
-        let scrollLeft;
-        let scrollTop;
-        let prevX = 0;
-        let prevY = 0;
-        let velocityX = 0;
-        let velocityY = 0;
-        let rafId;
-
-        const audioElement = document.getElementById('backgroundAudio');
-        const audioControl = document.getElementById('audioControl');
-        const prevAudio = document.getElementById('prevAudio');
-        const nextAudio = document.getElementById('nextAudio');
-        const audioSource = document.getElementById('audioSource');
-
-        const audioFiles = ["06_27_Braids.mp3", "justbuz.mp3", "thirdSong.mp3"];
-        let currentAudioIndex = 0;
+        let startX, startY, scrollLeft, scrollTop;
 
         body.addEventListener('mousedown', (e) => {
             isDown = true;
             body.classList.add('grabbing');
-            startX = e.pageX;
-            startY = e.pageY;
-            prevX = startX;
-            prevY = startY;
+            startX = e.pageX - window.scrollX;
+            startY = e.pageY - window.scrollY;
             scrollLeft = window.scrollX;
             scrollTop = window.scrollY;
-            if (rafId) {
-                cancelAnimationFrame(rafId);
-            }
         });
 
-        body.addEventListener('mousemove', (e) => {
-            if (!isDown) return;
-            e.preventDefault();
-            const x = e.pageX;
-            const y = e.pageY;
-            velocityX = x - prevX;
-            velocityY = y - prevY;
-            const walkX = (x - startX);
-            const walkY = (y - startY);
-            window.scrollTo(scrollLeft - walkX, scrollTop - walkY);
-            prevX = x;
-            prevY = y;
+        body.addEventListener('mouseleave', () => {
+            isDown = false;
+            body.classList.remove('grabbing');
         });
 
         body.addEventListener('mouseup', () => {
             isDown = false;
             body.classList.remove('grabbing');
-            applyMomentum();
         });
 
-        function applyMomentum() {
-            if (Math.abs(velocityX) < 0.1 && Math.abs(velocityY) < 0.1) return;
-            window.scrollBy(-velocityX, -velocityY); // Invert the velocity here
-            velocityX *= 0.95; // damping factor
-            velocityY *= 0.95; // damping factor
-            rafId = requestAnimationFrame(applyMomentum);
-        }
-
+        body.addEventListener('mousemove', (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - window.scrollX;
+            const y = e.pageY - window.scrollY;
+            const walkX = (x - startX);
+            const walkY = (y - startY);
+            window.scrollTo(scrollLeft - walkX, scrollTop - walkY);
+        });
+        
         audioControl.addEventListener('click', () => {
             if (audioElement.paused) {
                 audioElement.play();
