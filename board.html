@@ -161,6 +161,7 @@
         let velocityX = 0, velocityY = 0;
         let lastX = 0, lastY = 0;
         let rafId;
+        const movementHistory = []; // Array to track movement history
 
         body.addEventListener('mousedown', (e) => {
             isDown = true;
@@ -171,6 +172,7 @@
             scrollTop = window.scrollY;
             lastX = e.pageX;
             lastY = e.pageY;
+            movementHistory.length = 0; // Clear the movement history
             if (rafId) {
                 cancelAnimationFrame(rafId);
             }
@@ -200,9 +202,17 @@
             const walkX = (x - startX);
             const walkY = (y - startY);
 
-            // Calculate velocity
-            velocityX = e.pageX - lastX;
-            velocityY = e.pageY - lastY;
+            // Calculate current movement
+            const deltaX = e.pageX - lastX;
+            const deltaY = e.pageY - lastY;
+
+            // Add the current movement to the history
+            movementHistory.push({ deltaX, deltaY });
+
+            // Limit history size to last 5 movements
+            if (movementHistory.length > 5) {
+                movementHistory.shift();
+            }
 
             window.scrollTo(scrollLeft - walkX, scrollTop - walkY);
             lastX = e.pageX;
@@ -210,8 +220,19 @@
         });
 
         function applyMomentum() {
+            // Calculate the average movement from the history
+            const avgMovement = movementHistory.reduce((acc, cur) => {
+                acc.deltaX += cur.deltaX;
+                acc.deltaY += cur.deltaY;
+                return acc;
+            }, { deltaX: 0, deltaY: 0 });
+
+            const count = movementHistory.length;
+            velocityX = count > 0 ? avgMovement.deltaX / count : 0;
+            velocityY = count > 0 ? avgMovement.deltaY / count : 0;
+
             if (Math.abs(velocityX) < 0.1 && Math.abs(velocityY) < 0.1) return;
-            
+
             window.scrollBy(-velocityX, -velocityY);
 
             // Apply friction to gradually reduce the velocity
