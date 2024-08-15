@@ -158,6 +158,9 @@
         const body = document.body;
         let isDown = false;
         let startX, startY, scrollLeft, scrollTop;
+        let velocityX = 0, velocityY = 0;
+        let lastX = 0, lastY = 0;
+        let rafId;
 
         body.addEventListener('mousedown', (e) => {
             isDown = true;
@@ -166,14 +169,25 @@
             startY = e.pageY - window.scrollY;
             scrollLeft = window.scrollX;
             scrollTop = window.scrollY;
+            lastX = e.pageX;
+            lastY = e.pageY;
+            if (rafId) {
+                cancelAnimationFrame(rafId);
+            }
         });
 
         body.addEventListener('mouseleave', () => {
+            if (isDown) {
+                applyMomentum();
+            }
             isDown = false;
             body.classList.remove('grabbing');
         });
 
         body.addEventListener('mouseup', () => {
+            if (isDown) {
+                applyMomentum();
+            }
             isDown = false;
             body.classList.remove('grabbing');
         });
@@ -185,9 +199,28 @@
             const y = e.pageY - window.scrollY;
             const walkX = (x - startX);
             const walkY = (y - startY);
+
+            // Calculate velocity
+            velocityX = e.pageX - lastX;
+            velocityY = e.pageY - lastY;
+
             window.scrollTo(scrollLeft - walkX, scrollTop - walkY);
+            lastX = e.pageX;
+            lastY = e.pageY;
         });
-        
+
+        function applyMomentum() {
+            if (Math.abs(velocityX) < 0.1 && Math.abs(velocityY) < 0.1) return;
+            
+            window.scrollBy(-velocityX, -velocityY);
+
+            // Apply friction to gradually reduce the velocity
+            velocityX *= 0.95;
+            velocityY *= 0.95;
+
+            rafId = requestAnimationFrame(applyMomentum);
+        }
+
         audioControl.addEventListener('click', () => {
             if (audioElement.paused) {
                 audioElement.play();
