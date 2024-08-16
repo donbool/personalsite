@@ -27,13 +27,12 @@
 <body>
     <header>
         <div class="name-time">
-            
             <h1><em>Benjamin Benscher</em></h1>
             <a href="board.html">
                 <img class="mephoto" src="mepic.png" style="width: 200px; height: auto; display: block; margin: 10px auto;" />
             </a>
-                        <br>
-            <p><a href=https://24timezones.com/New-York/time> <i>TIME IN NEW YORK, NY</a> - <span id="liveTime"></span> EST</i></p>
+            <br>
+            <p><a href="https://24timezones.com/New-York/time"><i>TIME IN NEW YORK, NY</a> - <span id="liveTime"></span> EST</i></p>
         </div>
         <nav>
             <p>
@@ -51,28 +50,27 @@
 
     <script>
         function updateESTTime() {
-            // Get the current date
-            let now = new Date();
-    
-            // Convert the local time to EST
-            let estOffset = -4.0; // EST is UTC-5
-            let utc = now.getTime() + now.getTimezoneOffset() * 60000;
-            let est = new Date(utc + (3600000 * estOffset));
-    
-            // Format the time
-            let timeString = est.toLocaleTimeString();
-    
+            // Get the current date and time in the Eastern Time Zone (handles DST automatically)
+            const now = new Date();
+            const options = {
+                timeZone: 'America/New_York',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: true // This will ensure AM/PM format
+            };
+            const timeString = new Intl.DateTimeFormat('en-US', options).format(now);
+
             // Update the content of the liveTime element
             document.getElementById('liveTime').textContent = timeString;
         }
-    
+
         // Update the time immediately
         updateESTTime();
-    
+
         // Update the time every second
         setInterval(updateESTTime, 1000);
     </script>
-    
 
 </body>
 
