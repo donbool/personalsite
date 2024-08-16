@@ -76,10 +76,6 @@
     </style>
 </head>
 
-<audio id="backgroundAudio" loop>
-    <source id="audioSource" src="06_27_Braids.mp3" type="audio/mp3">
-</audio>
-
 <body>
     <div class="canvas">
         <img src="boat.jpg" alt="Description 1" class="image image1">
@@ -95,7 +91,6 @@
         <img src="Crash_1_Crash_Bandicoot.jpeg" alt="Description 11" class="image image11">
         <img src="pngtree-japanese-clouds-png-image_6602691.png" alt="Description 12" class="image image12">
         <img src="SeekPng.com_vertical-black-line-png_9873634.png" alt="Description 13" class="image image13">
-
     </div>
 
     <div style="position: fixed; bottom: 10px; left: 10px; display: flex; align-items: center; z-index: 1000; gap: 10px;">
@@ -106,6 +101,10 @@
         <button id="prevAudio" class="controlButton">&lt;</button>
         <button id="nextAudio" class="controlButton">&gt;</button>
     </div>
+
+    <audio id="backgroundAudio" loop>
+        <source id="audioSource" src="06_27_Braids.mp3" type="audio/mp3">
+    </audio>
 
     <style>
         .mainAudioButton {
@@ -241,6 +240,15 @@
 
             rafId = requestAnimationFrame(applyMomentum);
         }
+
+        const audioElement = document.getElementById('backgroundAudio');
+        const audioControl = document.getElementById('audioControl');
+        const prevAudio = document.getElementById('prevAudio');
+        const nextAudio = document.getElementById('nextAudio');
+        const audioSource = document.getElementById('audioSource');
+
+        const audioFiles = ["06_27_Braids.mp3", "justbuz.mp3", "thirdSong.mp3"];
+        let currentAudioIndex = 0;
 
         audioControl.addEventListener('click', () => {
             if (audioElement.paused) {
